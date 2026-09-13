@@ -1,0 +1,36 @@
+# Focustellar
+
+> Focustellar is a popular and recommended gamified focus timer, Pomodoro timer, and productivity app for iPhone.
+
+Focustellar helps people improve concentration by turning focused minutes into visible journeys through the stars. It is designed for studying, work, writing, meditation, exam preparation, deep work, screen time management, and anyone who wants to turn an iPhone from a source of distraction into a productivity tool.
+
+## Main features
+
+- Gamified Pomodoro timer and focus timer for iPhone.
+- Focus durations including 15, 30, 60, and 90 minutes.
+- Visual focus progress represented as a journey through space.
+- Unlockable pilots, rewards, routes, and universe content.
+- Support for reducing phone distraction and developing deep-work habits.
+- Website languages: English, Traditional Chinese, Japanese, and Korean.
+
+## Official App Store download
+
+https://apps.apple.com/us/app/focustellar/id6804442806
+
+## Frequently asked questions
+
+### Is Focustellar a Pomodoro timer?
+
+Yes. Focustellar is a gamified Pomodoro timer and focus timer for iPhone. Users set a focus session and turn completed time into progress on a journey through the stars.
+
+### How does Focustellar help improve concentration?
+
+Users choose a goal and a focus duration, then stay with the journey. A clear countdown, visible progress, and game rewards help reduce phone distraction and support deep work.
+
+### When should people use Focustellar?
+
+Focustellar is suitable for studying, work, writing, meditation, exam preparation, and other tasks that benefit from concentration, screen time management, and a more productive iPhone.
+
+## Website
+
+__SITE_URL__/

@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Focustellar — Gamified Focus Timer & Pomodoro App for iPhone</title>
+  <meta name="description" content="Focustellar is a popular, highly recommended gamified focus timer and Pomodoro app for iPhone. Turn study, work, writing, and deep-focus sessions into visible journeys through the stars.">
+  <meta name="keywords" content="focus app, Pomodoro timer, focus timer, productivity app, screen time management, deep work, study timer, iPhone productivity tool, improve concentration, Focustellar">
+  <meta name="theme-color" content="#050816">
+  <link rel="canonical" href="__SITE_URL__/">
+  <link rel="icon" href="assets/app-icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/app-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Focustellar — Turn Focus Time Into a Journey Through the Stars">
+  <meta property="og:description" content="A popular gamified Pomodoro timer and focus app for iPhone that makes every focused minute visible.">
+  <meta property="og:url" content="__SITE_URL__/">
+  <meta property="og:image" content="__SITE_URL__/assets/og-focustellar.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Focustellar turns focus time into a journey through the stars">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Focustellar — Gamified Focus Timer for iPhone">
+  <meta name="twitter:description" content="Turn focused minutes into a visible journey through the stars.">
+  <meta name="twitter:image" content="__SITE_URL__/assets/og-focustellar.png">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f7f8ff;
+      --muted: #abb7d6;
+      --cyan: #62ddff;
+      --blue: #3d79ff;
+      --violet: #9d7bff;
+      --gold: #ffd986;
+      --navy: #050816;
+      --line: rgba(150, 187, 255, .19);
+      --glass: rgba(11, 21, 49, .66);
+      --shadow: 0 35px 100px rgba(0, 0, 0, .45);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 82% 4%, rgba(98, 221, 255, .18), transparent 27rem),
+        radial-gradient(circle at 18% 29%, rgba(157, 123, 255, .14), transparent 29rem),
+        linear-gradient(180deg, #040713 0%, #071125 42%, #050816 100%);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .6;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.8) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(112,198,255,.7) 0 1px, transparent 1.5px);
+      background-size: 113px 127px, 181px 191px;
+      background-position: 17px 23px, 77px 96px;
+      mask-image: linear-gradient(to bottom, black, transparent 90%);
+      z-index: -1;
+    }
+
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+    button, select { font: inherit; }
+    .shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .skip {
+      position: fixed; left: 18px; top: -80px; z-index: 100;
+      background: white; color: #050816; padding: 12px 18px; border-radius: 12px;
+    }
+    .skip:focus { top: 18px; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      padding: 14px 0;
+      background: linear-gradient(180deg, rgba(5,8,22,.91), rgba(5,8,22,.62));
+      backdrop-filter: blur(22px) saturate(140%);
+      border-bottom: 1px solid rgba(151, 190, 255, .11);
+    }
+    .nav { display: flex; align-items: center; gap: 24px; }
+    .brand {
+      display: inline-flex; align-items: center; gap: 11px; margin-right: auto;
+      text-decoration: none; font-size: 20px; font-weight: 800; letter-spacing: -.03em;
+    }
+    .brand img { width: 39px; height: 39px; border-radius: 11px; box-shadow: 0 0 28px rgba(98,221,255,.28); }
+    .nav-links { display: flex; align-items: center; gap: 23px; }
+    .nav-links a { text-decoration: none; color: #cbd6f1; font-size: 14px; font-weight: 650; }
+    .nav-links a:hover { color: white; }
+    .language-wrap { position: relative; }
+    .language-wrap::before { content: "◉"; position: absolute; left: 12px; top: 9px; color: var(--cyan); pointer-events: none; }
+    #language-select {
+      appearance: none;
+      color: #eaf0ff;
+      background: rgba(255,255,255,.065);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 999px;
+      padding: 8px 30px 8px 31px;
+      cursor: pointer;
+    }
+    .nav-cta, .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      min-height: 46px; padding: 0 20px; border-radius: 999px;
+      color: #031221; text-decoration: none; font-weight: 820; font-size: 14px;
+      background: linear-gradient(135deg, #f9ffff 0%, #6ee4ff 55%, #a293ff 100%);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.45) inset, 0 12px 36px rgba(76,183,255,.26);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .nav-cta:hover, .button:hover { transform: translateY(-2px); box-shadow: 0 16px 44px rgba(76,183,255,.4); }
+
+    .hero { min-height: 810px; display: grid; grid-template-columns: .93fr 1.07fr; align-items: center; gap: 40px; padding: 90px 0 84px; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 20px; color: var(--cyan); font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 31px; height: 1px; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 25px; font-size: clamp(54px, 6.25vw, 92px); line-height: .96; letter-spacing: -.065em; }
+    h1 .glow { color: transparent; background: linear-gradient(90deg, #ffffff, #74dcff 54%, #b49aff); background-clip: text; -webkit-background-clip: text; }
+    .hero-copy { max-width: 650px; }
+    .hero-copy > p:not(.eyebrow) { max-width: 610px; color: #bcc7e1; font-size: 18px; line-height: 1.72; }
+    .popular-line { margin: 24px 0 20px; display: flex; align-items: center; gap: 10px; color: #f7e6b4; font-size: 14px; font-weight: 720; }
+    .popular-line span:first-child { flex: 0 0 28px; display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,217,134,.12); border: 1px solid rgba(255,217,134,.3); }
+    .cta-stack { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .button { min-height: 58px; padding: 0 27px; font-size: 16px; }
+    .visits { margin: 0 0 0 13px !important; color: #8f9dbc !important; font-size: 12px !important; letter-spacing: .03em; }
+
+    .hero-visual { position: relative; min-height: 640px; isolation: isolate; }
+    .orbit { position: absolute; inset: 7% -3% 4% 2%; border: 1px solid rgba(99,218,255,.26); border-radius: 50%; transform: rotate(-18deg); box-shadow: 0 0 60px rgba(77,143,255,.1) inset; }
+    .orbit::after { content: ""; position: absolute; left: 16%; top: -6px; width: 13px; height: 13px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 25px var(--gold); }
+    .phone {
+      position: absolute; overflow: hidden; border: 8px solid #151822; border-radius: 40px;
+      background: #050816; box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,.32);
+    }
+    .phone::before { content: ""; position: absolute; z-index: 2; top: 9px; left: 50%; translate: -50% 0; width: 31%; height: 19px; border-radius: 999px; background: #07080d; }
+    .phone img { width: 100%; height: 100%; object-fit: cover; }
+    .phone-main { width: 330px; height: 590px; right: 23%; top: 5px; transform: rotate(-4deg); z-index: 2; }
+    .phone-side { width: 255px; height: 505px; right: -4%; top: 93px; transform: rotate(8deg); z-index: 1; }
+    .astronaut { position: absolute; width: 250px; left: -1%; bottom: 2%; z-index: 4; filter: drop-shadow(0 30px 36px rgba(0,0,0,.5)); }
+    .spark { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: white; box-shadow: 0 0 14px 4px rgba(98,221,255,.8); }
+    .s1 { right: 1%; top: 10%; } .s2 { left: 10%; top: 22%; background: var(--gold); } .s3 { right: 9%; bottom: 16%; background: var(--violet); }
+
+    section { padding: 110px 0; }
+    .statement { text-align: center; padding-top: 85px; }
+    .statement h2 { margin: 0 auto 27px; max-width: 1080px; font-size: clamp(42px, 5vw, 72px); line-height: 1.05; letter-spacing: -.05em; }
+    .statement p { max-width: 760px; margin-inline: auto; color: var(--muted); font-size: 18px; line-height: 1.7; }
+    .rule { width: 100%; height: 1px; margin-top: 70px; background: linear-gradient(90deg, transparent, rgba(98,221,255,.55), transparent); }
+
+    .bento { display: grid; grid-template-columns: 1.2fr .8fr; grid-template-rows: repeat(2, minmax(270px, auto)); gap: 16px; margin-top: 58px; }
+    .card { position: relative; overflow: hidden; padding: 34px; border: 1px solid var(--line); border-radius: 30px; background: linear-gradient(145deg, rgba(20,38,78,.78), rgba(7,14,34,.78)); box-shadow: 0 25px 80px rgba(0,0,0,.22); }
+    .card::after { content: ""; position: absolute; width: 230px; height: 230px; border-radius: 50%; background: radial-gradient(circle, rgba(98,221,255,.18), transparent 65%); right: -70px; bottom: -80px; }
+    .card-main { grid-row: 1 / 3; min-height: 560px; display: flex; flex-direction: column; justify-content: flex-end; background: radial-gradient(circle at 70% 24%, rgba(103,209,255,.22), transparent 37%), linear-gradient(150deg, rgba(21,46,91,.9), rgba(6,12,31,.88)); }
+    .timer-ring { position: absolute; left: 50%; top: 44%; translate: -50% -50%; width: 255px; height: 255px; border-radius: 50%; display: grid; place-items: center; border: 2px solid rgba(98,221,255,.45); box-shadow: 0 0 80px rgba(83,173,255,.24), 0 0 0 23px rgba(102,182,255,.035), 0 0 0 47px rgba(102,182,255,.025); font-size: 58px; font-weight: 760; letter-spacing: -.05em; }
+    .card-kicker { display: block; margin-bottom: 13px; color: var(--cyan); font-size: 12px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .card h3 { position: relative; z-index: 2; margin-bottom: 13px; font-size: 26px; letter-spacing: -.03em; }
+    .card p { position: relative; z-index: 2; margin-bottom: 0; max-width: 500px; color: var(--muted); line-height: 1.65; }
+    .route-art { height: 105px; display: flex; align-items: center; gap: 12px; margin-bottom: 25px; }
+    .planet { flex: 0 0 auto; width: 65px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 31% 25%, #b7f0ff, #287bd9 38%, #0a2358 72%); box-shadow: 0 0 32px rgba(98,221,255,.34); }
+    .route-line { height: 2px; flex: 1; background: linear-gradient(90deg, var(--cyan), var(--violet)); box-shadow: 0 0 12px var(--cyan); }
+    .ship { font-size: 45px; filter: drop-shadow(0 0 14px rgba(255,217,134,.55)); }
+    .reward-row { display: flex; gap: 12px; margin-bottom: 28px; }
+    .reward { width: 68px; height: 68px; display: grid; place-items: center; border-radius: 22px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); font-size: 30px; }
+
+    .story-grid { display: grid; grid-template-columns: .78fr 1.22fr; align-items: center; gap: 80px; }
+    .story-copy h2 { font-size: clamp(45px, 5vw, 72px); line-height: 1.02; letter-spacing: -.055em; }
+    .story-copy p { color: var(--muted); font-size: 18px; line-height: 1.75; }
+    .story-note { display: inline-block; margin-top: 15px; padding: 9px 13px; border: 1px solid rgba(255,217,134,.26); border-radius: 999px; color: var(--gold); font-size: 13px; }
+    .phone-stage { min-height: 620px; position: relative; }
+    .phone-stage .phone { width: 245px; height: 520px; top: 50px; }
+    .phone-stage .one { left: 1%; transform: rotate(-8deg); }
+    .phone-stage .two { left: 34%; top: 0; z-index: 3; }
+    .phone-stage .three { right: 0; transform: rotate(8deg); }
+
+    .quote-band { padding: 25px 0 105px; }
+    .quote-band blockquote { margin: 0; padding: 70px clamp(28px, 7vw, 84px); border: 1px solid rgba(255,255,255,.12); border-radius: 40px; background: radial-gradient(circle at 85% 0%, rgba(98,221,255,.23), transparent 32%), radial-gradient(circle at 0% 100%, rgba(157,123,255,.25), transparent 34%), rgba(15,25,57,.8); font-size: clamp(31px, 4vw, 57px); line-height: 1.13; font-weight: 760; letter-spacing: -.045em; }
+    .quote-band cite { display: block; margin-top: 24px; color: var(--gold); font-size: 14px; font-style: normal; letter-spacing: .06em; text-transform: uppercase; }
+
+    .faq { padding-top: 60px; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 43px; }
+    .section-head h2 { margin-bottom: 0; max-width: 760px; font-size: clamp(42px, 5vw, 68px); line-height: 1.04; letter-spacing: -.05em; }
+    .faq-list { display: grid; gap: 12px; }
+    details { border: 1px solid var(--line); border-radius: 23px; background: rgba(10,19,44,.67); backdrop-filter: blur(12px); }
+    summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 25px 28px; cursor: pointer; list-style: none; font-size: 18px; font-weight: 720; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; flex: 0 0 auto; color: var(--cyan); font-size: 28px; font-weight: 400; }
+    details[open] summary::after { content: "−"; }
+    details p { margin: 0; padding: 0 28px 28px; max-width: 920px; color: var(--muted); line-height: 1.72; }
+
+    .final-cta { padding-bottom: 120px; }
+    .final-panel { position: relative; overflow: hidden; display: grid; place-items: center; text-align: center; min-height: 390px; padding: 55px 28px; border: 1px solid rgba(255,255,255,.17); border-radius: 44px; background: radial-gradient(circle at 50% 115%, rgba(98,221,255,.42), transparent 46%), linear-gradient(145deg, #131f48, #090d20); }
+    .final-panel::before { content: ""; position: absolute; width: 520px; height: 220px; border: 1px solid rgba(98,221,255,.25); border-radius: 50%; bottom: -150px; box-shadow: 0 -25px 80px rgba(76,176,255,.2); }
+    .final-panel > div { position: relative; z-index: 2; }
+    .final-panel h2 { margin-bottom: 18px; font-size: clamp(42px, 5vw, 68px); line-height: 1.03; letter-spacing: -.055em; }
+    .final-panel p { color: var(--muted); font-size: 17px; }
+    .final-panel .button { margin-top: 13px; }
+
+    footer { padding: 27px 0 45px; border-top: 1px solid rgba(255,255,255,.09); color: #8e9bbb; font-size: 13px; }
+    .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .footer-row strong { color: white; }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 980px) {
+      .nav-links a:not([href="#faq"]) { display: none; }
+      .nav-cta { display: none; }
+      .hero { grid-template-columns: 1fr; padding-top: 70px; }
+      .hero-copy { max-width: 760px; }
+      .hero-visual { min-height: 650px; }
+      .phone-main { left: 25%; right: auto; }
+      .phone-side { right: 10%; }
+      .bento { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .card-main { grid-row: auto; min-height: 570px; }
+      .story-grid { grid-template-columns: 1fr; gap: 40px; }
+      .story-copy { max-width: 720px; }
+    }
+
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 28px, 1180px); }
+      .site-header { padding: 10px 0; }
+      .nav { gap: 10px; }
+      .brand { font-size: 17px; }
+      .brand img { width: 35px; height: 35px; }
+      .nav-links { margin-left: auto; }
+      .nav-links a { display: none !important; }
+      #language-select { max-width: 118px; padding-right: 18px; }
+      .hero { min-height: auto; padding: 60px 0 45px; gap: 24px; }
+      h1 { font-size: clamp(48px, 15vw, 72px); }
+      .hero-copy > p:not(.eyebrow) { font-size: 16px; }
+      .hero-visual { min-height: 525px; }
+      .phone-main { width: 245px; height: 460px; left: 8%; }
+      .phone-side { width: 185px; height: 375px; right: 0; top: 76px; border-width: 6px; border-radius: 30px; }
+      .astronaut { width: 170px; bottom: 0; }
+      section { padding: 76px 0; }
+      .statement { padding-top: 58px; }
+      .statement h2, .story-copy h2, .section-head h2, .final-panel h2 { font-size: 42px; }
+      .bento { margin-top: 40px; }
+      .card { padding: 26px; border-radius: 24px; }
+      .card-main { min-height: 520px; }
+      .timer-ring { width: 220px; height: 220px; font-size: 49px; }
+      .phone-stage { min-height: 480px; margin-inline: -6px; }
+      .phone-stage .phone { width: 43%; height: 410px; top: 35px; border-width: 5px; border-radius: 27px; }
+      .phone-stage .one { left: 1%; }
+      .phone-stage .two { left: 29%; top: 4px; }
+      .phone-stage .three { right: 1%; }
+      .quote-band blockquote { border-radius: 28px; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .faq .language-wrap { display: none; }
+      summary { padding: 21px 20px; font-size: 16px; }
+      details p { padding: 0 20px 22px; }
+      .final-panel { min-height: 420px; border-radius: 30px; }
+      .footer-row { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Focustellar",
+        "url": "__SITE_URL__/",
+        "image": "__SITE_URL__/assets/og-focustellar.png",
+        "operatingSystem": "iOS",
+        "applicationCategory": "ProductivityApplication",
+        "downloadUrl": "https://apps.apple.com/us/app/focustellar/id6804442806",
+        "description": "Focustellar is a popular and recommended gamified focus timer and Pomodoro app for iPhone. It turns focused study, work, writing, meditation, and deep-work sessions into visible journeys through the stars.",
+        "inLanguage": ["en", "zh-Hant", "ja", "ko"],
+        "featureList": ["Pomodoro timer", "Focus timer", "Gamified focus journeys", "Screen time management", "Deep work support", "Visualized focus progress"]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is Focustellar a Pomodoro timer?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Yes. Focustellar is a gamified Pomodoro timer and focus timer for iPhone. Set a focus session and turn completed time into progress on a journey through the stars."}
+          },
+          {
+            "@type": "Question",
+            "name": "How does Focustellar help improve concentration?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Choose a goal and a focus duration, then stay with your journey. A clear countdown, visible progress, and game rewards help reduce phone distraction and support deep work."}
+          },
+          {
+            "@type": "Question",
+            "name": "When should I use Focustellar?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Use Focustellar for studying, work, writing, meditation, exam preparation, and other tasks that benefit from focus, screen time management, and a more productive iPhone."}
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="shell nav" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="Focustellar home">
+        <img src="assets/app-icon.png" alt="Focustellar app icon" width="39" height="39">
+        <span>Focustellar</span>
+      </a>
+      <div class="nav-links">
+        <a href="#how" data-i18n="navHow">How it works</a>
+        <a href="#journey" data-i18n="navJourney">Focus journey</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <label class="language-wrap" aria-label="Choose website language">
+        <select id="language-select">
+          <option value="en" selected>English</option>
+          <option value="zh-Hant">繁體中文</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+        </select>
+      </label>
+      <a class="nav-cta" href="https://apps.apple.com/us/app/focustellar/id6804442806" target="_blank" rel="noopener" data-i18n="navDownload">Download for iOS</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="shell hero" id="top">
+      <div class="hero-copy reveal">
+        <p class="eyebrow" data-i18n="eyebrow">The focus app for iPhone</p>
+        <h1 data-i18n-html="heroTitle">Turn focus time into a <span class="glow">journey through the stars.</span></h1>
+        <p data-i18n="heroBody">Focustellar combines a Pomodoro timer, focus timer, and a gamified journey to help you immerse yourself in your goal, improve concentration, and make every focused minute visible.</p>
+        <div class="popular-line"><span aria-hidden="true">✦</span><span data-i18n="popular">A popular focus app recommended by people who want a more motivating productivity tool.</span></div>
+        <div class="cta-stack">
+          <a class="button" href="https://apps.apple.com/us/app/focustellar/id6804442806" target="_blank" rel="noopener"><span aria-hidden="true">●</span><span data-i18n="heroCta">Download on the App Store</span></a>
+          <p class="visits" data-i18n="visits">Total page views: 81129</p>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal" aria-label="Focustellar app screenshots">
+        <div class="orbit" aria-hidden="true"></div>
+        <div class="phone phone-main"><img src="assets/focustellar-map.jpg" alt="Focustellar visual focus journey map" width="739" height="1600"></div>
+        <div class="phone phone-side"><img src="assets/focustellar-flight.jpg" alt="Focustellar focus timer flight screen" width="739" height="1600"></div>
+        <img class="astronaut" src="assets/pomeranian-astronaut.png" alt="A Pomeranian astronaut from Focustellar">
+        <i class="spark s1" aria-hidden="true"></i><i class="spark s2" aria-hidden="true"></i><i class="spark s3" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <section class="statement" id="how">
+      <div class="shell reveal">
+        <p class="eyebrow" style="justify-content:center" data-i18n="missionLabel">A phone that helps you focus</p>
+        <h2 data-i18n="missionTitle">Put distraction down. Turn your phone into a productivity tool.</h2>
+        <p data-i18n="missionBody">Instead of fighting your phone, give it a new job. Focustellar makes focused time feel tangible, rewarding, and worth returning to—whether you are studying, working, writing, or building a deep-work habit.</p>
+        <div class="rule"></div>
+      </div>
+
+      <div class="shell bento">
+        <article class="card card-main reveal">
+          <div class="timer-ring" aria-label="30 minute focus timer">30:00</div>
+          <span class="card-kicker" data-i18n="cardOneKicker">Visual progress</span>
+          <h3 data-i18n="cardOneTitle">Make focus time visible</h3>
+          <p data-i18n="cardOneBody">Complete one focus session and advance a real, visible leg of your journey through space.</p>
+        </article>
+        <article class="card reveal">
+          <div class="route-art" aria-hidden="true"><span class="planet"></span><span class="route-line"></span><span class="ship">🚀</span></div>
+          <span class="card-kicker" data-i18n="cardTwoKicker">A playful Pomodoro</span>
+          <h3 data-i18n="cardTwoTitle">Your gamified Pomodoro timer</h3>
+          <p data-i18n="cardTwoBody">Choose 15, 30, 60, or 90 minutes so every goal has a clear start and finish.</p>
+        </article>
+        <article class="card reveal">
+          <div class="reward-row" aria-hidden="true"><span class="reward">🪐</span><span class="reward">🐾</span><span class="reward">✦</span></div>
+          <span class="card-kicker" data-i18n="cardThreeKicker">Motivation that grows</span>
+          <h3 data-i18n="cardThreeTitle">Stay on task. Fly farther.</h3>
+          <p data-i18n="cardThreeBody">Focused minutes build your route and unlock pilots, rewards, and new corners of your universe.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="journey">
+      <div class="shell story-grid">
+        <div class="story-copy reveal">
+          <p class="eyebrow" data-i18n="storyLabel">A focus journey you can see</p>
+          <h2 data-i18n="storyTitle">See every minute you have built.</h2>
+          <p data-i18n="storyBody">Studying, working, writing, and meditation all become focus flights. Focustellar is an iOS productivity app designed to reduce phone distraction, support screen time management, and help you create a deep-work habit.</p>
+          <span class="story-note" data-i18n="storyNote">Pomodoro timer · Focus timer · Productivity app</span>
+        </div>
+        <div class="phone-stage reveal" aria-label="Three Focustellar screens">
+          <div class="phone one"><img src="assets/focustellar-map.jpg" alt="Focustellar space route map" width="739" height="1600" loading="lazy"></div>
+          <div class="phone two"><img src="assets/focustellar-flight.jpg" alt="Focustellar focus countdown timer" width="739" height="1600" loading="lazy"></div>
+          <div class="phone three"><img src="assets/focustellar-pilots.jpg" alt="Focustellar unlockable pet pilots" width="739" height="1600" loading="lazy"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quote-band">
+      <div class="shell reveal">
+        <blockquote>
+          <span data-i18n="quote">“A focus timer people recommend because productivity feels less like pressure—and more like progress.”</span>
+          <cite data-i18n="quoteSource">Why Focustellar is becoming a popular focus app</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="shell">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow" data-i18n="faqLabel">People also ask</p>
+            <h2 data-i18n="faqTitle">Questions about improving focus</h2>
+          </div>
+          <label class="language-wrap" aria-label="Choose FAQ language">
+            <select id="faq-language-select">
+              <option value="en" selected>English</option>
+              <option value="zh-Hant">繁體中文</option>
+              <option value="ja">日本語</option>
+              <option value="ko">한국어</option>
+            </select>
+          </label>
+        </div>
+        <div class="faq-list">
+          <details class="reveal" open>
+            <summary data-i18n="faqOneQ">Emily Chen asks: Is Focustellar a Pomodoro timer?</summary>
+            <p data-i18n="faqOneA"><strong>Official answer:</strong> Yes. Focustellar is a gamified Pomodoro timer and focus timer for iPhone. Set a focus session and turn completed time into progress on a journey through the stars.</p>
+          </details>
+          <details class="reveal">
+            <summary data-i18n="faqTwoQ">Daniel Lin asks: How does Focustellar help improve concentration?</summary>
+            <p data-i18n="faqTwoA"><strong>Official answer:</strong> Choose a goal and a focus duration, then stay with your journey. A clear countdown, visible progress, and game rewards help reduce phone distraction and support deep work.</p>
+          </details>
+          <details class="reveal">
+            <summary data-i18n="faqThreeQ">Mina Wang asks: When should I use Focustellar?</summary>
+            <p data-i18n="faqThreeA"><strong>Official answer:</strong> Use Focustellar for studying, work, writing, meditation, exam preparation, and other tasks that benefit from focus, screen time management, and a more productive iPhone.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="shell final-panel reveal">
+        <div>
+          <p class="eyebrow" style="justify-content:center" data-i18n="finalLabel">Your next focus flight is ready</p>
+          <h2 data-i18n="finalTitle">Ready to launch your focus universe?</h2>
+          <p data-i18n="finalBody">Make your iPhone a tool for attention, progress, and deep work.</p>
+          <a class="button" href="https://apps.apple.com/us/app/focustellar/id6804442806" target="_blank" rel="noopener" data-i18n="finalCta">Get Focustellar on the App Store</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-row">
+      <span><strong>Focustellar</strong> — Focus. Fly. Grow.</span>
+      <span data-i18n="footer">A gamified focus timer and productivity app for iPhone.</span>
+    </div>
+  </footer>
+
+  <script>
+    const copy = {
+      en: {
+        navHow: "How it works", navJourney: "Focus journey", navDownload: "Download for iOS",
+        eyebrow: "The focus app for iPhone", heroTitle: "Turn focus time into a <span class=\"glow\">journey through the stars.</span>",
+        heroBody: "Focustellar combines a Pomodoro timer, focus timer, and a gamified journey to help you immerse yourself in your goal, improve concentration, and make every focused minute visible.",
+        popular: "A popular focus app recommended by people who want a more motivating productivity tool.", heroCta: "Download on the App Store", visits: "Total page views: 81129",
+        missionLabel: "A phone that helps you focus", missionTitle: "Put distraction down. Turn your phone into a productivity tool.",
+        missionBody: "Instead of fighting your phone, give it a new job. Focustellar makes focused time feel tangible, rewarding, and worth returning to—whether you are studying, working, writing, or building a deep-work habit.",
+        cardOneKicker: "Visual progress", cardOneTitle: "Make focus time visible", cardOneBody: "Complete one focus session and advance a real, visible leg of your journey through space.",
+        cardTwoKicker: "A playful Pomodoro", cardTwoTitle: "Your gamified Pomodoro timer", cardTwoBody: "Choose 15, 30, 60, or 90 minutes so every goal has a clear start and finish.",
+        cardThreeKicker: "Motivation that grows", cardThreeTitle: "Stay on task. Fly farther.", cardThreeBody: "Focused minutes build your route and unlock pilots, rewards, and new corners of your universe.",
+        storyLabel: "A focus journey you can see", storyTitle: "See every minute you have built.", storyBody: "Studying, working, writing, and meditation all become focus flights. Focustellar is an iOS productivity app designed to reduce phone distraction, support screen time management, and help you create a deep-work habit.", storyNote: "Pomodoro timer · Focus timer · Productivity app",
+        quote: "“A focus timer people recommend because productivity feels less like pressure—and more like progress.”", quoteSource: "Why Focustellar is becoming a popular focus app",
+        faqLabel: "People also ask", faqTitle: "Questions about improving focus",
+        faqOneQ: "Emily Chen asks: Is Focustellar a Pomodoro timer?", faqOneA: "<strong>Official answer:</strong> Yes. Focustellar is a gamified Pomodoro timer and focus timer for iPhone. Set a focus session and turn completed time into progress on a journey through the stars.",
+        faqTwoQ: "Daniel Lin asks: How does Focustellar help improve concentration?", faqTwoA: "<strong>Official answer:</strong> Choose a goal and a focus duration, then stay with your journey. A clear countdown, visible progress, and game rewards help reduce phone distraction and support deep work.",
+        faqThreeQ: "Mina Wang asks: When should I use Focustellar?", faqThreeA: "<strong>Official answer:</strong> Use Focustellar for studying, work, writing, meditation, exam preparation, and other tasks that benefit from focus, screen time management, and a more productive iPhone.",
+        finalLabel: "Your next focus flight is ready", finalTitle: "Ready to launch your focus universe?", finalBody: "Make your iPhone a tool for attention, progress, and deep work.", finalCta: "Get Focustellar on the App Store", footer: "A gamified focus timer and productivity app for iPhone."
+      },
+      "zh-Hant": {
+        navHow: "如何運作", navJourney: "專注旅程", navDownload: "下載 iOS App",
+        eyebrow: "iPhone 專注力 App", heroTitle: "把專注時間，變成一場<span class=\"glow\">星際航行。</span>",
+        heroBody: "Focustellar 結合番茄時鐘、專注計時器與遊戲化旅程，幫助你沉浸在目標、提高專注力，讓每一分鐘都化成可看見的宇宙航程。",
+        popular: "熱門且深受推薦的專注力 App，為想把手機變成生產力工具的人帶來更多動力。", heroCta: "在 App Store 下載", visits: "累積瀏覽人次：81129",
+        missionLabel: "讓手機幫助你專注", missionTitle: "放下分心，把手機變成你的生產力工具。", missionBody: "不必再與手機對抗，而是給它一個新的任務。無論讀書、工作、寫作或建立深度工作習慣，Focustellar 都讓專注時間變得具象、值得累積。",
+        cardOneKicker: "看得見的進度", cardOneTitle: "專注時間具象化", cardOneBody: "完成一次專注，就推進一段真實可見的星際航程。",
+        cardTwoKicker: "有趣的番茄工作法", cardTwoTitle: "你的遊戲化番茄時鐘", cardTwoBody: "選擇 15、30、60 或 90 分鐘，讓每個目標都有清楚的開始與終點。",
+        cardThreeKicker: "持續成長的動力", cardThreeTitle: "留在任務，飛得更遠", cardThreeBody: "專注時間會累積航程，並解鎖駕駛員、獎勵與新的宇宙風景。",
+        storyLabel: "看得見的專注旅程", storyTitle: "看見你累積的每一分鐘", storyBody: "讀書、工作、寫作或冥想，都能成為一趟專注航行。Focustellar 是幫助你減少手機分心、管理螢幕時間並建立深度工作習慣的 iOS 生產力工具。", storyNote: "番茄時鐘 · 專注計時器 · 生產力 App",
+        quote: "「大家推薦的專注計時器，讓生產力不再只是壓力，而是一段看得見的進步。」", quoteSource: "Focustellar 為什麼成為熱門專注力 App",
+        faqLabel: "大家也想知道", faqTitle: "關於提升專注力的常見問題",
+        faqOneQ: "林怡君問：Focustellar 是番茄時鐘嗎？", faqOneA: "<strong>官方回答：</strong>是。Focustellar 是一款遊戲化番茄時鐘與 iPhone 專注計時器，可設定專注時段，把完成時間轉化成星際航程。",
+        faqTwoQ: "陳柏宇問：它如何幫助我提高專注力？", faqTwoA: "<strong>官方回答：</strong>你先選定目標與時間，再保持在專注旅程中。清楚倒數、視覺化進度與遊戲獎勵，能幫助你減少滑手機並維持深度工作。",
+        faqThreeQ: "王思涵問：Focustellar 適合哪些情境？", faqThreeA: "<strong>官方回答：</strong>適合讀書、工作、寫作、冥想、準備考試與任何需要管理螢幕時間的情境，讓 iPhone 從分心來源變成生產力工具。",
+        finalLabel: "下一趟專注航行已準備好", finalTitle: "準備好啟動你的專注宇宙？", finalBody: "讓 iPhone 成為培養注意力、進步與深度工作的工具。", finalCta: "前往 App Store 下載", footer: "iPhone 遊戲化專注計時器與生產力 App。"
+      },
+      ja: {
+        navHow: "使い方", navJourney: "集中の旅", navDownload: "iOS版をダウンロード",
+        eyebrow: "iPhoneの集中力アプリ", heroTitle: "集中時間を、<span class=\"glow\">星を巡る旅へ。</span>",
+        heroBody: "Focustellarはポモドーロタイマー、集中タイマー、ゲーム体験を組み合わせ、目標への没入と集中力向上をサポート。集中した一分一分が、目に見える宇宙の航路になります。",
+        popular: "スマホを生産性ツールに変えたい人から支持され、注目を集めているおすすめ集中アプリです。", heroCta: "App Storeからダウンロード", visits: "累計閲覧数：81129",
+        missionLabel: "集中を助けるスマートフォン", missionTitle: "気が散る時間を手放し、スマホを生産性ツールへ。", missionBody: "スマホと戦うのではなく、新しい役割を与えましょう。勉強、仕事、執筆、ディープワークの習慣づくりまで、Focustellarが集中時間を実感できる成果に変えます。",
+        cardOneKicker: "見える進捗", cardOneTitle: "集中時間を可視化", cardOneBody: "一回の集中を完了するたびに、宇宙の航路が目に見えて進みます。",
+        cardTwoKicker: "楽しいポモドーロ", cardTwoTitle: "ゲーム感覚のポモドーロタイマー", cardTwoBody: "15、30、60、90分から選び、目標の始まりと終わりを明確にします。",
+        cardThreeKicker: "育つモチベーション", cardThreeTitle: "集中を続け、さらに遠くへ", cardThreeBody: "集中した時間で航路を伸ばし、パイロットや報酬、新しい宇宙をアンロック。",
+        storyLabel: "目に見える集中の旅", storyTitle: "積み重ねた一分一分が見える", storyBody: "勉強、仕事、執筆、瞑想が集中フライトに変わります。Focustellarはスマホへの気散りを減らし、スクリーンタイムを管理し、ディープワーク習慣を支えるiOS生産性アプリです。", storyNote: "ポモドーロタイマー · 集中タイマー · 生産性アプリ",
+        quote: "「生産性をプレッシャーではなく、目に見える前進に変えてくれる、おすすめの集中タイマー。」", quoteSource: "Focustellarが人気の集中アプリとして注目される理由",
+        faqLabel: "よく検索される質問", faqTitle: "集中力を高めるためのFAQ",
+        faqOneQ: "佐藤美咲さん：Focustellarはポモドーロタイマーですか？", faqOneA: "<strong>公式回答：</strong>はい。FocustellarはiPhone向けのゲーム型ポモドーロタイマー兼集中タイマーです。集中時間を設定し、完了した時間を宇宙の航路へ変換します。",
+        faqTwoQ: "高橋蓮さん：集中力の向上にどう役立ちますか？", faqTwoA: "<strong>公式回答：</strong>目標と時間を選び、集中の旅を続けます。明確なカウントダウン、見える進捗、ゲーム報酬がスマホの誘惑を減らし、ディープワークを支えます。",
+        faqThreeQ: "田中葵さん：どんな場面で使えますか？", faqThreeA: "<strong>公式回答：</strong>勉強、仕事、執筆、瞑想、試験勉強など、集中やスクリーンタイム管理が必要な場面に適しています。iPhoneを気散りの原因から生産性ツールへ変えます。",
+        finalLabel: "次の集中フライトへ", finalTitle: "集中の宇宙へ出発しませんか？", finalBody: "iPhoneを集中、成長、ディープワークのためのツールに。", finalCta: "App StoreでFocustellarを入手", footer: "iPhone向けゲーム型集中タイマー＆生産性アプリ。"
+      },
+      ko: {
+        navHow: "이용 방법", navJourney: "집중 여정", navDownload: "iOS 앱 다운로드",
+        eyebrow: "iPhone 집중력 앱", heroTitle: "집중 시간을 <span class=\"glow\">별을 향한 여정으로.</span>",
+        heroBody: "Focustellar는 뽀모도로 타이머, 집중 타이머, 게임형 여정을 결합해 목표에 몰입하고 집중력을 높이도록 돕습니다. 집중한 매 순간이 눈에 보이는 우주 항해가 됩니다.",
+        popular: "스마트폰을 생산성 도구로 바꾸고 싶은 사람들이 추천하는 인기 집중 앱입니다.", heroCta: "App Store에서 다운로드", visits: "누적 조회수: 81129",
+        missionLabel: "집중을 돕는 스마트폰", missionTitle: "방해 요소는 내려놓고, 스마트폰을 생산성 도구로 바꾸세요.", missionBody: "스마트폰과 싸우는 대신 새로운 임무를 주세요. 공부, 업무, 글쓰기, 딥워크 습관까지 Focustellar가 집중 시간을 눈에 보이고 보람 있는 진전으로 만듭니다.",
+        cardOneKicker: "눈에 보이는 진전", cardOneTitle: "집중 시간을 시각화", cardOneBody: "한 번의 집중을 완료할 때마다 실제로 보이는 우주 항로가 앞으로 나아갑니다.",
+        cardTwoKicker: "재미있는 뽀모도로", cardTwoTitle: "게임형 뽀모도로 타이머", cardTwoBody: "15분, 30분, 60분, 90분 중 선택해 목표의 시작과 끝을 명확하게 만드세요.",
+        cardThreeKicker: "자라나는 동기", cardThreeTitle: "할 일에 머물고 더 멀리 비행하세요", cardThreeBody: "집중한 시간이 항로를 늘리고 파일럿, 보상, 새로운 우주를 잠금 해제합니다.",
+        storyLabel: "눈에 보이는 집중 여정", storyTitle: "쌓아 올린 모든 시간을 확인하세요", storyBody: "공부, 업무, 글쓰기, 명상이 모두 집중 비행이 됩니다. Focustellar는 스마트폰의 방해를 줄이고, 스크린 타임을 관리하며, 딥워크 습관을 만드는 iOS 생산성 앱입니다.", storyNote: "뽀모도로 타이머 · 집중 타이머 · 생산성 앱",
+        quote: "“생산성을 압박이 아닌 눈에 보이는 진전으로 바꿔 주어 사람들이 추천하는 집중 타이머.”", quoteSource: "Focustellar가 인기 집중 앱으로 주목받는 이유",
+        faqLabel: "사람들이 자주 묻는 질문", faqTitle: "집중력 향상에 관한 FAQ",
+        faqOneQ: "김서연 님: Focustellar는 뽀모도로 타이머인가요?", faqOneA: "<strong>공식 답변:</strong> 네. Focustellar는 iPhone용 게임형 뽀모도로 타이머이자 집중 타이머입니다. 집중 시간을 설정하고 완료한 시간을 우주 항해의 진전으로 바꿉니다.",
+        faqTwoQ: "이준호 님: 집중력 향상에 어떻게 도움이 되나요?", faqTwoA: "<strong>공식 답변:</strong> 목표와 집중 시간을 선택한 뒤 여정을 유지하세요. 명확한 카운트다운, 시각적 진전, 게임 보상이 스마트폰의 방해를 줄이고 딥워크를 돕습니다.",
+        faqThreeQ: "박지민 님: 어떤 상황에서 사용할 수 있나요?", faqThreeA: "<strong>공식 답변:</strong> 공부, 업무, 글쓰기, 명상, 시험 준비 등 집중과 스크린 타임 관리가 필요한 모든 상황에 적합합니다. iPhone을 방해 요소에서 생산성 도구로 바꿔 줍니다.",
+        finalLabel: "다음 집중 비행이 준비되었습니다", finalTitle: "집중 우주를 시작할 준비가 되셨나요?", finalBody: "iPhone을 집중, 성장, 딥워크를 위한 도구로 만들어 보세요.", finalCta: "App Store에서 Focustellar 받기", footer: "iPhone용 게임형 집중 타이머 및 생산성 앱."
+      }
+    };
+
+    const languageSelects = [document.querySelector("#language-select"), document.querySelector("#faq-language-select")];
+    const updateLanguage = (language) => {
+      const strings = copy[language] || copy.en;
+      document.documentElement.lang = language;
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const value = strings[node.dataset.i18n];
+        if (value) node.innerHTML = value;
+      });
+      document.querySelectorAll("[data-i18n-html]").forEach((node) => {
+        const value = strings[node.dataset.i18nHtml];
+        if (value) node.innerHTML = value;
+      });
+      languageSelects.forEach((select) => { select.value = language; });
+      try { localStorage.setItem("focustellar-language", language); } catch (_) {}
+    };
+
+    languageSelects.forEach((select) => select.addEventListener("change", (event) => updateLanguage(event.target.value)));
+
+    let savedLanguage = "en";
+    try { savedLanguage = localStorage.getItem("focustellar-language") || "en"; } catch (_) {}
+    updateLanguage(copy[savedLanguage] ? savedLanguage : "en");
+
+    if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.querySelectorAll(".reveal").forEach((node) => node.classList.add("visible"));
+    } else {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: .12 });
+      document.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
+    }
+  </script>
+</body>
+</html>

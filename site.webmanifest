@@ -1,0 +1,16 @@
+{
+  "name": "Focustellar",
+  "short_name": "Focustellar",
+  "description": "A gamified focus timer and Pomodoro app for iPhone.",
+  "start_url": "__SITE_URL__/",
+  "display": "standalone",
+  "background_color": "#050816",
+  "theme_color": "#050816",
+  "icons": [
+    {
+      "src": "assets/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
